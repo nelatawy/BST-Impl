@@ -67,7 +67,6 @@ public class RedBlackTree<E extends Comparable<E>> extends BST<E> {
     @Override
     public boolean insert(E data) {
         if (root == nil) {
-            System.out.println("Inserting at root : " + data.toString());
             root = new RedBlackNode<>(data, Color.BLACK);
             root.parent = nil;
             root.left = root.right = nil;
@@ -282,44 +281,5 @@ public class RedBlackTree<E extends Comparable<E>> extends BST<E> {
         rootToFix.color = Color.BLACK;
     }
 
-    static void main() {
-        BST<Integer> rb = new RedBlackTree<>();
-        BST<Integer> bst = new SimpleBST<>();
-        long start, end;
-        long limit = (long) 1e5;
 
-
-        start = (long) (System.nanoTime() / 1e6);
-        for (int i = 0; i < limit; i ++){
-            rb.insert(i);
-
-        }
-        end = (long) (System.nanoTime() / 1e6);
-        System.out.println("RB insert took : " + (end - start) + " ms");
-        System.out.println(rb.height());
-
-
-//
-        start = (long) (System.nanoTime() / 1e6);
-        for (int i = 0; i < limit; i ++){
-            bst.insert(i);
-        }
-        end = (long) (System.nanoTime() / 1e6);
-        System.out.println("Non-RB insert took : " + (end - start) + " ms");
-//
-//
-        start = (long) (System.nanoTime() / 1e6);
-        System.out.println(rb.contains((int)limit- 1));
-        end = (long) (System.nanoTime() / 1e6);
-        System.out.println("RB took : " + (end - start) + " ms");
-
-        start = (long) (System.nanoTime() / 1e6);
-        System.out.println(bst.contains((int)limit- 1));
-        end = (long) (System.nanoTime() / 1e6);
-        System.out.println("Non-RB took : " + (end - start) + " ms");
-//        rb.inOrder().forEach(System.out::println);
-
-
-
-    }
 }
