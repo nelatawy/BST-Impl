@@ -12,9 +12,14 @@ public abstract class BST<E extends Comparable<E>> {
 
     public abstract boolean delete(E data);
 
-    public boolean contains(E data) {
+
+    public boolean contains(E data){
+        return contains(data, null);
+    }
+
+    protected boolean contains(E data, TreeNode<E> nullNode) {
         TreeNode<E> scanItr = root;
-        while (scanItr != null && scanItr.data != null) {
+        while (scanItr != nullNode) {
             if (data.compareTo(scanItr.data) == 0)
                 return true;
             else if (data.compareTo(scanItr.data) > 0){
@@ -27,32 +32,41 @@ public abstract class BST<E extends Comparable<E>> {
         return false;
     }
 
+
     public List<E> inOrder() {
-        return inOrder(root);
+        return inOrder(root, null);
     }
 
-    private List<E> inOrder(TreeNode<E> root) {
-        if (root == null){
+    protected List<E> inOrder(TreeNode<E> root, TreeNode<E> nullNode) {
+        if (root == nullNode){
             return Collections.emptyList();
         }
-        List<E> res = new ArrayList<>(inOrder(root.left));
+        List<E> res = new ArrayList<>(inOrder(root.left, nullNode));
         res.add(root.data);
-        res.addAll(inOrder(root.right));
+        res.addAll(inOrder(root.right, nullNode));
         return res;
     }
 
-    public TreeNode<E> getMin(TreeNode<E> root) {
-        if (root == null)
+
+    public TreeNode<E> getMin(TreeNode<E> root){return getMin(root, null);}
+
+    protected TreeNode<E> getMin(TreeNode<E> root, TreeNode<E> nullNode) {
+        if (root == nullNode)
             return null;
         TreeNode<E> itr = root;
-        while (itr.left != null) {
+        while (itr.left != nullNode) {
             itr = itr.left;
         }
         return itr;
     }
 
-    public void transplant(TreeNode<E> toBeReplaced, TreeNode<E> toBeInserted) {
-        if (toBeReplaced.parent == null) {
+
+    protected void transplant(TreeNode<E> toBeReplaced, TreeNode<E> toBeInserted){
+        transplant(toBeReplaced, toBeInserted, null);
+    }
+
+    protected void transplant(TreeNode<E> toBeReplaced, TreeNode<E> toBeInserted, TreeNode<E> nullNode) {
+        if (toBeReplaced.parent == nullNode) {
             root = toBeInserted;
         } else if (toBeReplaced.parent.left == toBeReplaced) {
             toBeReplaced.parent.left = toBeInserted;
@@ -64,39 +78,43 @@ public abstract class BST<E extends Comparable<E>> {
 
     }
 
-    public void rotateLeft(TreeNode<E> node) {
-        if (node == null || node.right == null)
+
+    protected void rotateLeft(TreeNode<E> node, TreeNode<E> nullNode) {
+        if (node == nullNode || node.right == nullNode)
             return;
 
         TreeNode<E> newRoot = node.right;
         node.right = newRoot.left;
-        node.right.parent = node;
+        if (node.right != nullNode)
+            node.right.parent = node;
 
-        transplant(node, newRoot); //parent-child links updated
+        transplant(node, newRoot, nullNode); //parent-child links updated
         newRoot.left = node;
         node.parent = newRoot;
 
     }
 
-    public void rotateRight(TreeNode<E> node) {
-        if (node == null || node.left == null)
+    protected void rotateRight(TreeNode<E> node, TreeNode<E> nullNode) {
+        if (node == nullNode || node.left == nullNode)
             return;
         TreeNode<E> newRoot = node.left;
         node.left = newRoot.right;
-        node.left.parent = node;
-        transplant(node, newRoot);
+        if (node.left != nullNode)
+            node.left.parent = node;
+
+        transplant(node, newRoot, nullNode);
         newRoot.right = node;
         node.parent = newRoot;
     }
 
     public int height() {
-        return height(root);
+        return height(root, null);
     }
 
-    private int height(TreeNode<E> root) {
-        if (root == null)
+    protected int height(TreeNode<E> root, TreeNode<E> nullNode) {
+        if (root == nullNode)
             return 0;
-        return 1 + Math.max(height(root.left), height(root.right));
+        return 1 + Math.max(height(root.left, nullNode), height(root.right, nullNode));
     }
 
     public int size() {

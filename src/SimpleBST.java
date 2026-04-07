@@ -12,22 +12,22 @@ public class SimpleBST<E extends Comparable<E>> extends BST<E> {
         TreeNode<E> scanItr = root;
         while (scanItr != null) {
             itr = scanItr;
-            if (data.compareTo(scanItr.data) == 0)
+            if (data.compareTo(scanItr.data) == 0) {
                 return false; //already exists
-            else if (data.compareTo(scanItr.data) > 0){
-                scanItr = itr.right;
-            }
-            else {
-                scanItr = itr.left;
+            } else if (data.compareTo(scanItr.data) > 0){
+                scanItr = scanItr.right;
+            } else {
+                scanItr = scanItr.left;
             }
         }
         TreeNode<E> newNode = new TreeNode<>(data);
         newNode.parent = itr;
 
-        if (itr.right == null)
-            itr.right = newNode;
-        else
+        if (data.compareTo(itr.data) < 0) {
             itr.left = newNode;
+        } else  {
+            itr.right = newNode;
+        }
         size++;
         return true;
     }

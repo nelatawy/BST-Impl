@@ -1,3 +1,8 @@
+import java.security.PublicKey;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
 public class RedBlackTree<E extends Comparable<E>> extends BST<E> {
 
     enum  Color {
@@ -16,11 +21,53 @@ public class RedBlackTree<E extends Comparable<E>> extends BST<E> {
     RedBlackNode<E> nil ;
     public RedBlackTree() {
         nil = new RedBlackNode<>(null, Color.BLACK);
+        root = nil;
+        nil.left = nil;
+        nil.right = nil;
+        nil.parent = nil;
 
     }
+
+    @Override
+    public TreeNode<E> getMin(TreeNode<E> root){
+        return super.getMin(root, nil);
+    }
+
+    @Override
+    public int height(){
+        return super.height(root, nil);
+    }
+
+    @Override
+    public List<E> inOrder() {
+        return super.inOrder(root, nil);
+    }
+
+    @Override
+    public boolean contains(E data){
+        return super.contains(data, nil);
+    }
+
+    // to make the code cleaner, we use those as wrappers for the general-purpose methods in the base class
+    @Override
+    protected void transplant(TreeNode<E> toBeReplaced, TreeNode<E> toBeInserted){
+        super.transplant(toBeReplaced, toBeInserted, nil);
+    }
+
+    private void rotateLeft(TreeNode<E> node) {
+        super.rotateLeft(node, nil);
+    }
+
+    private void rotateRight(TreeNode<E> node) {
+        super.rotateRight(node, nil);
+    }
+
+
+
     @Override
     public boolean insert(E data) {
-        if (root == null) {
+        if (root == nil) {
+            System.out.println("Inserting at root : " + data.toString());
             root = new RedBlackNode<>(data, Color.BLACK);
             root.parent = nil;
             root.left = root.right = nil;
@@ -32,22 +79,26 @@ public class RedBlackTree<E extends Comparable<E>> extends BST<E> {
         TreeNode<E> scanItr = root;
         while (scanItr != nil) {
             itr = scanItr;
-            System.out.println(scanItr.data);
-            if (scanItr.data.compareTo(data) == 0) {
+//            System.out.println(scanItr.data);
+            if (data.compareTo(scanItr.data) == 0) {
                 return false; //already exists
             } else if (data.compareTo(scanItr.data) > 0) {
+//                System.out.println("Going with " + data.toString() + " to the right of " + scanItr.data.toString());
                 scanItr = scanItr.right;
             } else  {
+//                System.out.println("Going with " + data.toString() + " to the left of " + scanItr.data.toString());
                 scanItr = scanItr.left;
             }
+
         }
         TreeNode<E> newNode = new RedBlackNode<>(data, Color.RED);
         newNode.parent = itr;
         newNode.left = newNode.right = nil;
-
-        if (itr.left == nil) {
+        if (data.compareTo(itr.data) < 0) {
+//            System.out.println("Inserting " + data.toString() + " at the left of " + itr.data.toString());
             itr.left = newNode;
         } else  {
+//            System.out.println("Inserting " + data.toString() + " at the right of " + itr.data.toString());
             itr.right = newNode;
         }
         insertFixUp(newNode);
@@ -63,13 +114,15 @@ public class RedBlackTree<E extends Comparable<E>> extends BST<E> {
             parent = (RedBlackNode<E>) node.parent;
             grandparent = (RedBlackNode<E>) parent.parent;
 
-            if (parent == parent.parent.left) {
-                uncle = (RedBlackNode<E>) node.parent.parent.right;
+            if (parent == grandparent.left) {
+                uncle = (RedBlackNode<E>) grandparent.right;
                 if (uncle.color == Color.RED) { // case 1
                     parent.color = Color.BLACK;
                     uncle.color = Color.BLACK;
                     grandparent.color = Color.RED;
                     node = grandparent;
+
+                    parent = (RedBlackNode<E>) node.parent; // for next check (necessary for correctness)
                 } else {
                     if (parent.right == node) { // case 2
                         rotateLeft(parent);
@@ -82,12 +135,13 @@ public class RedBlackTree<E extends Comparable<E>> extends BST<E> {
                     rotateRight(grandparent);
                 }
             } else {
-                uncle = (RedBlackNode<E>) node.parent.parent.left;
+                uncle = (RedBlackNode<E>) grandparent.left;
                 if (uncle.color == Color.RED) { // case 1
                     parent.color = Color.BLACK;
                     uncle.color = Color.BLACK;
                     grandparent.color = Color.RED;
                     node = grandparent;
+                    parent = (RedBlackNode<E>) node.parent; // for next check (necessary for correctness)
                 } else {
                     if (parent.left == node) { // case 2
                         rotateRight(parent);
@@ -101,14 +155,12 @@ public class RedBlackTree<E extends Comparable<E>> extends BST<E> {
                 }
             }
         }
-        if (node == root){
-            ((RedBlackNode<E>)node).color = Color.BLACK;
-        }
+        ((RedBlackNode<E>) root).color = Color.BLACK;
     }
 
     @Override
     public boolean delete(E data) {
-        if (root == null) {
+        if (root == nil) {
             return false;
         }
         TreeNode<E> scanItr = root;
@@ -141,7 +193,7 @@ public class RedBlackTree<E extends Comparable<E>> extends BST<E> {
                     transplant(scanItr, scanItr.left);
                     root = (scanItr == root)?scanItr.left:root;
                     rootToFix = scanItr.left;
-                } else {
+                } else{
                     transplant(scanItr, scanItr.right);
                     root = (scanItr == root)?scanItr.right:root;
                     rootToFix = scanItr.right;
@@ -158,34 +210,36 @@ public class RedBlackTree<E extends Comparable<E>> extends BST<E> {
     }
 
     private void deleteFixUp(RedBlackNode<E> rootToFix) {
-        RedBlackNode<E> sibling ;
+        RedBlackNode<E> sibling, parent;
         while (rootToFix.color != Color.RED && rootToFix != root){
             if (rootToFix.parent.left == rootToFix) {
-                sibling = (RedBlackNode<E>) rootToFix.parent.right;
+                parent = (RedBlackNode<E>) rootToFix.parent;
+                sibling = (RedBlackNode<E>) parent.right;
+
                 if (sibling.color == Color.RED) { //case 1
-                    ((RedBlackNode<E>)rootToFix.parent).color = Color.RED;
+                    parent.color = Color.RED;
                     sibling.color = Color.BLACK;
                     rotateLeft(rootToFix.parent);
-                    sibling = (RedBlackNode<E>) rootToFix.parent.right; // new sibling to fall to case 2
+                    sibling = (RedBlackNode<E>)parent.right; // new sibling to fall to case 2
                 }
                 if (((RedBlackNode<E>) sibling.left).color == Color.BLACK && ((RedBlackNode<E>) sibling.right).color == Color.BLACK) {
                     sibling.color = Color.RED;
                     // make it the parent's problem
-                    rootToFix = (RedBlackNode<E>) rootToFix.parent;
+                    rootToFix = parent;
                 }
                 else {
                     if (((RedBlackNode<E>)sibling.right).color == Color.BLACK) {
-                        rotateRight(sibling);
+                        ((RedBlackNode<E>)sibling.left).color = Color.BLACK;
                         sibling.color = Color.RED;
+                        rotateRight(sibling);
                         //update sibling pointer
-                        sibling =  (RedBlackNode<E>) rootToFix.parent.right;
-                        sibling.color = Color.BLACK;
+                        sibling =  (RedBlackNode<E>) parent.right;
                     }
                     // now we are sure right sibling is RED
-                    rotateLeft(rootToFix.parent);
+                    rotateLeft(parent);
                     //sibling will take be the node's grandparent (wild to say out loud) pos
-                    sibling.color = (((RedBlackNode<E>) rootToFix.parent).color);
-                    ((RedBlackNode<E>) rootToFix.parent).color = Color.BLACK;
+                    sibling.color = parent.color;
+                    parent.color = Color.BLACK;
 
                     ((RedBlackNode<E>) sibling.right).color = Color.BLACK; // also update the other branch to make the black heights balanced
                     break; // we are done already
@@ -229,14 +283,43 @@ public class RedBlackTree<E extends Comparable<E>> extends BST<E> {
     }
 
     static void main() {
-        BST<Integer> bst = new RedBlackTree<>();
-        bst.insert(1);
-        bst.insert(2);
+        BST<Integer> rb = new RedBlackTree<>();
+        BST<Integer> bst = new SimpleBST<>();
+        long start, end;
+        long limit = (long) 1e5;
 
-//        bst.insert(3);
-        System.out.println(bst.height());
-        System.out.println(bst.delete(1));
-        System.out.println(bst.contains(1));
+
+        start = (long) (System.nanoTime() / 1e6);
+        for (int i = 0; i < limit; i ++){
+            rb.insert(i);
+
+        }
+        end = (long) (System.nanoTime() / 1e6);
+        System.out.println("RB insert took : " + (end - start) + " ms");
+        System.out.println(rb.height());
+
+
+//
+        start = (long) (System.nanoTime() / 1e6);
+        for (int i = 0; i < limit; i ++){
+            bst.insert(i);
+        }
+        end = (long) (System.nanoTime() / 1e6);
+        System.out.println("Non-RB insert took : " + (end - start) + " ms");
+//
+//
+        start = (long) (System.nanoTime() / 1e6);
+        System.out.println(rb.contains((int)limit- 1));
+        end = (long) (System.nanoTime() / 1e6);
+        System.out.println("RB took : " + (end - start) + " ms");
+
+        start = (long) (System.nanoTime() / 1e6);
+        System.out.println(bst.contains((int)limit- 1));
+        end = (long) (System.nanoTime() / 1e6);
+        System.out.println("Non-RB took : " + (end - start) + " ms");
+//        rb.inOrder().forEach(System.out::println);
+
+
 
     }
 }
