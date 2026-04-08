@@ -6,11 +6,35 @@
 <?import javafx.scene.layout.Pane?>
 
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Visualization.visController">
+<AnchorPane prefHeight="700.0" prefWidth="1100.0"
+            style="-fx-background-color: #fdf6e3;"
+            stylesheets="@styles.css"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Visualization.visController">
 
-  <Pane fx:id="viewport" layoutX="12.0" layoutY="71.0" prefHeight="315.0" prefWidth="577.0" />
-  <Button layoutX="12.0" layoutY="14.0" onAction="#insertInTree" mnemonicParsing="false" prefHeight="27.0" prefWidth="164.0" text="Insert" />
-  <Button layoutX="416.0" layoutY="14.0" onAction="#deleteFromTree" mnemonicParsing="false" prefHeight="27.0" prefWidth="170.0" text="Delete" />
-  <TextField fx:id ="value" layoutX="191.0" layoutY="15.0" prefHeight="27.0" prefWidth="211.0" />
+  <Pane fx:id="viewport"
+        layoutX="12.0" layoutY="58.0"
+        prefWidth="1076.0" prefHeight="630.0" />
+
+  <Button AnchorPane.topAnchor="12.0"
+          AnchorPane.leftAnchor="12.0"
+          onAction="#insertInTree"
+          mnemonicParsing="false"
+          prefHeight="34.0" prefWidth="180.0"
+          text="Insert" />
+
+  <Button AnchorPane.topAnchor="12.0"
+          AnchorPane.rightAnchor="12.0"
+          onAction="#deleteFromTree"
+          mnemonicParsing="false"
+          prefHeight="34.0" prefWidth="180.0"
+          text="Delete" />
+
+  <TextField fx:id="value"
+             AnchorPane.topAnchor="13.0"
+             AnchorPane.leftAnchor="204.0"
+             AnchorPane.rightAnchor="204.0"
+             prefHeight="32.0" />
 
 </AnchorPane>

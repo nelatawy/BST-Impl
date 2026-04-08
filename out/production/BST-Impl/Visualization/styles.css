@@ -1,32 +1,68 @@
 .button {
-    -fx-background-color : #78d6c2;
-    -fx-border-radius: 10px;
-    -fx-background-radius: 10px;
-    -fx-effect: dropshadow , 12px , 12px, 12px;
-    -fx-text-fill: #20202e;
-}
-.text-field {
-    -fx-background-radius: 10px;
-    -fx-border-radius: 10px;
-    -fx-background-color: #dfedef;
-    -fx-border-width: 3px;
-    -fx-border-color: transparent;
-}
-.text-field:focused {
-    -fx-border-color: #78d6c2;
+    -fx-font-family: "Georgia";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-color: #f5c542;
 
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+
+    -fx-border-color: #111111;
+    -fx-border-width: 2.5px;
+
+    -fx-text-fill: #111111;
+    -fx-cursor: hand;
+
+    -fx-effect: dropshadow(one-pass-box, #111111, 0, 1.0, 5, 5);
 }
+
+.button:hover {
+    -fx-background-color: #f0b800;
+    -fx-effect: dropshadow(one-pass-box, #111111, 0, 1.0, 7, 7);
+}
+
+.button:pressed {
+    -fx-background-color: #c89a00;
+    -fx-effect: dropshadow(one-pass-box, #111111, 0, 1.0, 2, 2);
+}
+
+.text-field {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 13px;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+
+    -fx-background-color: #fffef0;
+    -fx-border-color: #111111;
+    -fx-border-width: 2.5px;
+    -fx-border-style: dashed inside;
+
+    -fx-text-fill: #111111;
+
+    -fx-effect: dropshadow(one-pass-box, #111111, 0, 1.0, 2, 2);
+}
+
+.text-field:focused {
+    -fx-border-color: #000000;
+    -fx-border-style: solid;
+}
+
 .red-node {
-    -fx-fill: #b83535;
-    -fx-effect: dropshadow(gaussian, #dd6d6d, 15, 0.4, 0, 0);
+    -fx-fill: #d62828;
+    -fx-stroke: #111111;
+    -fx-stroke-width: 2.5;
+    -fx-effect: dropshadow(one-pass-box, #111111, 0, 1.0, 4, 4);
 }
+
 .red-node:hover {
-    -fx-fill: #d80000;
+    -fx-fill: #a81c1c;
 }
 
 .black-node {
-    -fx-fill: #353535;
-    -fx-effect: dropshadow(gaussian, #818080, 15, 0.4, 0, 0);
+    -fx-fill: #222222;
+    -fx-stroke: #111111;
+    -fx-stroke-width: 2.5;
+    -fx-effect: dropshadow(one-pass-box, #555555, 0, 1.0, 4, 4);
 }
 
 .black-node:hover {
