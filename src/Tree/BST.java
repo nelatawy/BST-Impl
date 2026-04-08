@@ -1,3 +1,5 @@
+package Tree;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -119,6 +121,10 @@ public abstract class BST<E extends Comparable<E>> {
 
     public int size() {
         return this.size;
+    }
+
+    public TreeNode<E> getRoot(){
+        return root;
     }
 
 }

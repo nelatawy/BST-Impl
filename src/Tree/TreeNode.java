@@ -1,8 +1,10 @@
+package Tree;
+
 public class TreeNode<E> {
-    TreeNode<E> left;
-    TreeNode<E> right;
-    TreeNode<E> parent;
-    E data;
+    public TreeNode<E> left;
+    public TreeNode<E> right;
+    public TreeNode<E> parent;
+    public E data;
     TreeNode(E data) {
         this.data = data;
         this.right = null;

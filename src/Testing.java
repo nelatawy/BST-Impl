@@ -1,5 +1,8 @@
 import Generator.ArrayGenerator;
 import SortingStrats.MergeSort;
+import Tree.BST;
+import Tree.RedBlackTree;
+import Tree.SimpleBST;
 
 void main() {
     Scanner sc = new Scanner(System.in);
@@ -11,7 +14,7 @@ void main() {
     System.out.println("-".repeat(10));
     int mode = Math.clamp(sc.nextInt(), 1, 3);
 
-    System.out.println("Enter the tree type (1) Simple BST, (2) Red-Black BST");
+    System.out.println("Enter the tree type (1) Simple Tree.BST, (2) Red-Black Tree.BST");
     System.out.println("-".repeat(10));
     int treeType = Math.clamp(sc.nextInt(), 1, 2);
 

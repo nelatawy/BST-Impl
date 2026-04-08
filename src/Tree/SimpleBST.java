@@ -1,3 +1,4 @@
+package Tree;
 
 public class SimpleBST<E extends Comparable<E>> extends BST<E> {
 

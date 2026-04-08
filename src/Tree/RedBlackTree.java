@@ -1,17 +1,16 @@
-import java.security.PublicKey;
-import java.util.Collections;
-import java.util.Date;
+package Tree;
+
 import java.util.List;
 
 public class RedBlackTree<E extends Comparable<E>> extends BST<E> {
 
-    enum  Color {
+    public enum  Color {
         RED,
         BLACK
     }
 
-    static class RedBlackNode<E> extends TreeNode<E> {
-        Color color;
+    public static class RedBlackNode<E> extends TreeNode<E> {
+        public Color color;
         RedBlackNode(E data, Color color) {
             super(data);
             this.color = color;
@@ -279,6 +278,10 @@ public class RedBlackTree<E extends Comparable<E>> extends BST<E> {
 
         }
         rootToFix.color = Color.BLACK;
+    }
+
+    public boolean isNil(TreeNode<E> node){
+        return node == nil;
     }
 
 
