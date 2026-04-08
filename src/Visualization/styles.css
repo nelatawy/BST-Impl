@@ -1,0 +1,34 @@
+.button {
+    -fx-background-color : #78d6c2;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow , 12px , 12px, 12px;
+    -fx-text-fill: #20202e;
+}
+.text-field {
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-background-color: #dfedef;
+    -fx-border-width: 3px;
+    -fx-border-color: transparent;
+}
+.text-field:focused {
+    -fx-border-color: #78d6c2;
+
+}
+.red-node {
+    -fx-fill: #b83535;
+    -fx-effect: dropshadow(gaussian, #dd6d6d, 15, 0.4, 0, 0);
+}
+.red-node:hover {
+    -fx-fill: #d80000;
+}
+
+.black-node {
+    -fx-fill: #353535;
+    -fx-effect: dropshadow(gaussian, #818080, 15, 0.4, 0, 0);
+}
+
+.black-node:hover {
+    -fx-fill: #000000;
+}

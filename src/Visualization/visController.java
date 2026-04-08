@@ -1,11 +1,10 @@
 package Visualization;
 
 import Tree.RedBlackTree;
-import Tree.TreeNode;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Label;
+import javafx.geometry.Point2D;
+import javafx.scene.Group;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.Pane;
@@ -31,7 +30,10 @@ public class visController implements Initializable {
 
     RedBlackTree<Integer> tree;
 
-    double offsetX, offsetY, lastX, lastY;
+    double gridLastX, gridLastY;
+
+    double nodeLastX, nodeLastY;
+
     double scale;
 
     int LEVEL_HEIGHT = 150;
@@ -44,10 +46,8 @@ public class visController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        offsetX = 0;
-        offsetY = 0;
-        lastX = 0;
-        lastY = 0;
+        gridLastX = 0;
+        gridLastY = 0;
         scale= 1;
 
         Rectangle clip = new Rectangle();
@@ -72,19 +72,19 @@ public class visController implements Initializable {
         });
 
         canvas.setOnMousePressed(e -> {
-            lastX =  e.getSceneX();
-            lastY = e.getSceneY();
+            gridLastX =  e.getSceneX();
+            gridLastY = e.getSceneY();
         });
 
         canvas.setOnMouseDragged(e -> {
-            offsetX += (e.getSceneX() - lastX);
-            offsetY += (e.getSceneY() - lastY);
+            double dx = (e.getSceneX() - gridLastX);
+            double dy = (e.getSceneY() - gridLastY);
 
-            lastX = e.getSceneX();
-            lastY = e.getSceneY();
+            gridLastX = e.getSceneX();
+            gridLastY = e.getSceneY();
 
-            canvas.setTranslateX(offsetX);
-            canvas.setTranslateY(offsetY);
+            canvas.setTranslateX(canvas.getTranslateX() + dx);
+            canvas.setTranslateY(canvas.getTranslateY() + dy);
 
         });
 
@@ -127,34 +127,87 @@ public class visController implements Initializable {
 
     }
 
-    public void draw(RedBlackTree.RedBlackNode<Integer> root, int minX, int maxX, int depth){
+    public Group draw(RedBlackTree.RedBlackNode<Integer> root, int minX, int maxX, int depth){
         if (tree.isNil(root)){
-            return;
+            return null;
         }
         int targetX = (minX + maxX)/2;
         int targetY = depth * LEVEL_HEIGHT;
-        Circle node = new Circle(targetX, targetY, CIRCLE_RADIUS);
+
+        Group nodeGp = new Group();
+        nodeGp.setLayoutX(targetX);
+        nodeGp.setLayoutY(targetY);
+
+        Circle node = new Circle(0, 0, CIRCLE_RADIUS); //relative to the group
         Text label = new Text(String.valueOf(root.data));
-        label.setX(targetX - label.getLayoutBounds().getWidth() / 2);
-        label.setY(targetY + label.getLayoutBounds().getHeight() / 4);
+        label.setX(- label.getLayoutBounds().getWidth() / 2); //relative to the gp
+        label.setY(label.getLayoutBounds().getHeight() / 4);
+
+        nodeGp.getChildren().addAll(node, label);
+        canvas.getChildren().add(nodeGp);
+
+
+        nodeGp.setOnMousePressed(e -> {
+            Point2D p = canvas.sceneToLocal(e.getSceneX(), e.getSceneY());
+            nodeLastX = p.getX();
+            nodeLastY = p.getY();
+            e.consume();
+        });
+
+        nodeGp.setOnMouseDragged(e -> {
+            Point2D p = canvas.sceneToLocal(e.getSceneX(), e.getSceneY());
+
+            double dx = p.getX() - nodeLastX;
+            double dy = p.getY() - nodeLastY;
+
+            nodeGp.setTranslateX(nodeGp.getTranslateX() + dx);
+            nodeGp.setTranslateY(nodeGp.getTranslateY() + dy);
+
+            nodeLastX = p.getX();
+            nodeLastY = p.getY();
+
+            e.consume();
+        });
+
+
 
 
         label.setFill(Color.WHITE);
-        node.setFill((root.color == RedBlackTree.Color.BLACK)? Color.BLACK : Color.RED);
+        node.getStyleClass().add((root.color == RedBlackTree.Color.BLACK)? "black-node" : "red-node");
 
 
-        canvas.getChildren().addAll(node, label);
+
         if (!tree.isNil(root.left)){
-            Line linel = new Line(targetX, targetY + CIRCLE_RADIUS, (double) (minX + targetX) /2, (depth + 1)*LEVEL_HEIGHT - CIRCLE_RADIUS);
-            canvas.getChildren().add(linel);
-            draw((RedBlackTree.RedBlackNode<Integer>) root.left, minX, targetX, depth + 1);
+
+            Group leftNode = draw((RedBlackTree.RedBlackNode<Integer>) root.left, minX, targetX, depth + 1);
+            connectNodes(nodeGp, leftNode);
         }
 
         if (!tree.isNil(root.right)){
-            Line liner = new Line(targetX, targetY + CIRCLE_RADIUS, (double) (maxX + targetX) /2, (depth + 1)*LEVEL_HEIGHT - CIRCLE_RADIUS);
-            canvas.getChildren().add(liner);
-            draw((RedBlackTree.RedBlackNode<Integer>) root.right, targetX, maxX, depth + 1);
+            Group rightNode = draw((RedBlackTree.RedBlackNode<Integer>) root.right, targetX, maxX, depth + 1);
+            connectNodes(nodeGp, rightNode);
         }
+        return nodeGp;
+    }
+
+    private void connectNodes(Group first, Group second) {
+        Line line = new Line();
+
+        line.startXProperty().bind(
+                first.layoutXProperty().add(first.translateXProperty())
+        );
+        line.startYProperty().bind(
+                first.layoutYProperty().add(first.translateYProperty())
+        );
+
+        line.endXProperty().bind(
+                second.layoutXProperty().add(second.translateXProperty())
+        );
+        line.endYProperty().bind(
+                second.layoutYProperty().add(second.translateYProperty())
+        );
+
+        canvas.getChildren().addFirst(line);
     }
 
 }
