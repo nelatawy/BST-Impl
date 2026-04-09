@@ -1,8 +1,6 @@
 package Tree;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public abstract class BST<E extends Comparable<E>> {
     int size = 0;
@@ -39,14 +37,45 @@ public abstract class BST<E extends Comparable<E>> {
         return inOrder(root, null);
     }
 
+//    protected List<E> inOrder(TreeNode<E> root, TreeNode<E> nullNode) {
+//        if (root == nullNode){
+//            return Collections.emptyList();
+//        }
+//        List<E> res = new ArrayList<>(inOrder(root.left, nullNode));
+//        res.add(root.data);
+//        res.addAll(inOrder(root.right, nullNode));
+//        return res;
+//    }
+
+
+    // switched to iterative approach to avoid StackOverflow
     protected List<E> inOrder(TreeNode<E> root, TreeNode<E> nullNode) {
-        if (root == nullNode){
+        if (root == null || root == nullNode)
             return Collections.emptyList();
+
+        Stack<AbstractMap.SimpleEntry<TreeNode<E>, Boolean>> stack = new Stack<>();
+        List<E> inorder = new ArrayList<>();
+        stack.push(new AbstractMap.SimpleEntry<>(root, false));
+        while (!stack.empty()) {
+            AbstractMap.SimpleEntry<TreeNode<E>, Boolean> pair = stack.pop();
+            TreeNode<E> node = pair.getKey();
+            boolean isSecondVisit = pair.getValue();
+
+            if (isSecondVisit) {
+                inorder.add(node.data);
+            } else {
+                if (node.right != nullNode) {
+                    stack.push(new AbstractMap.SimpleEntry<>(node.right, false));
+                }
+                stack.push(new AbstractMap.SimpleEntry<>(node, true));
+
+                if (node.left != nullNode) {
+                    stack.push(new AbstractMap.SimpleEntry<>(node.left, false));
+                }
+            }
         }
-        List<E> res = new ArrayList<>(inOrder(root.left, nullNode));
-        res.add(root.data);
-        res.addAll(inOrder(root.right, nullNode));
-        return res;
+
+        return inorder;
     }
 
 
@@ -113,11 +142,40 @@ public abstract class BST<E extends Comparable<E>> {
         return height(root, null);
     }
 
+//    protected int height(TreeNode<E> root, TreeNode<E> nullNode) {
+//        if (root == nullNode)
+//            return 0;
+//        return 1 + Math.max(height(root.left, nullNode), height(root.right, nullNode));
+//    }
+
+
+    // migrated to an iterative approach
     protected int height(TreeNode<E> root, TreeNode<E> nullNode) {
-        if (root == nullNode)
+        if (root == null || root == nullNode)
             return 0;
-        return 1 + Math.max(height(root.left, nullNode), height(root.right, nullNode));
+
+        Stack<AbstractMap.SimpleEntry<TreeNode<E>, Integer>> stack = new Stack<>();
+        int maxHeight = (int) -1e9;
+        stack.push(new AbstractMap.SimpleEntry<>(root, 0));
+        while (!stack.empty()) {
+            AbstractMap.SimpleEntry<TreeNode<E>, Integer> pair = stack.pop();
+            TreeNode<E> node = pair.getKey();
+            int nodeDepth = pair.getValue();
+            maxHeight = Math.max(maxHeight, nodeDepth);
+
+            if (node.right != nullNode) {
+                stack.push(new AbstractMap.SimpleEntry<>(node.right, nodeDepth + 1));
+            }
+
+            if (node.left != nullNode) {
+                stack.push(new AbstractMap.SimpleEntry<>(node.left, nodeDepth + 1));
+            }
+
+        }
+        return maxHeight;
     }
+
+
 
     public int size() {
         return this.size;

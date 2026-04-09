@@ -1,0 +1,65 @@
+/home/nelatawy/.jdks/openjdk-25/bin/java -javaagent:/snap/intellij-idea-ultimate/742/lib/idea_rt.jar=36693 -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath /home/nelatawy/College/DSA/BST-Impl/target/classes:/home/nelatawy/.m2/repository/org/openjfx/javafx-controls/25.0.1/javafx-controls-25.0.1.jar:/home/nelatawy/.m2/repository/org/openjfx/javafx-controls/25.0.1/javafx-controls-25.0.1-linux.jar:/home/nelatawy/.m2/repository/org/openjfx/javafx-graphics/25.0.1/javafx-graphics-25.0.1.jar:/home/nelatawy/.m2/repository/org/openjfx/javafx-graphics/25.0.1/javafx-graphics-25.0.1-linux.jar:/home/nelatawy/.m2/repository/org/openjfx/javafx-base/25.0.1/javafx-base-25.0.1.jar:/home/nelatawy/.m2/repository/org/openjfx/javafx-base/25.0.1/javafx-base-25.0.1-linux.jar:/home/nelatawy/.m2/repository/org/openjfx/javafx-fxml/25.0.1/javafx-fxml-25.0.1.jar:/home/nelatawy/.m2/repository/org/openjfx/javafx-fxml/25.0.1/javafx-fxml-25.0.1-linux.jar:/home/nelatawy/.m2/repository/org/slf4j/slf4j-api/2.0.17/slf4j-api-2.0.17.jar:/home/nelatawy/.m2/repository/ch/qos/logback/logback-classic/1.5.18/logback-classic-1.5.18.jar:/home/nelatawy/.m2/repository/ch/qos/logback/logback-core/1.5.18/logback-core-1.5.18.jar com.bst.Testing
+Array with 10% randomization
+--------------------
+Normal (Merge Sort)
+--------------------
+Mean Runtime : 85.376818ms
+Median Runtime : 84.925997ms
+Standard Deviation : 10.503643224194123ms
+--------------------
+BST (Naive)
+--------------------
+Mean Runtime : 47181.5982854ms
+Median Runtime : 47602.4967715ms
+Standard Deviation : 5333.124632029001ms
+--------------------
+BST (Red-Black)
+--------------------
+Mean Runtime : 82.4396844ms
+Median Runtime : 58.839352500000004ms
+Standard Deviation : 50.26907866544306ms
+--------------------
+RB Speedup : 572.3165806466867x
+Array with 5% randomization
+--------------------
+Normal (Merge Sort)
+--------------------
+Mean Runtime : 77.5507638ms
+Median Runtime : 75.4130845ms
+Standard Deviation : 8.315152323142888ms
+--------------------
+BST (Naive)
+--------------------
+Mean Runtime : 48248.0897644ms
+Median Runtime : 47669.209411ms
+Standard Deviation : 1414.7377960390306ms
+--------------------
+BST (Red-Black)
+--------------------
+Mean Runtime : 42.8453752ms
+Median Runtime : 40.682642ms
+Standard Deviation : 6.067967207479699ms
+--------------------
+RB Speedup : 1126.0979636467275x
+Array with 1% randomization
+--------------------
+Normal (Merge Sort)
+--------------------
+Mean Runtime : 42.974272ms
+Median Runtime : 31.490129500000002ms
+Standard Deviation : 24.733033645373492ms
+--------------------
+BST (Naive)
+--------------------
+Mean Runtime : 21533.2257236ms
+Median Runtime : 9171.8364445ms
+Standard Deviation : 16821.07354505479ms
+--------------------
+BST (Red-Black)
+--------------------
+Mean Runtime : 26.1206968ms
+Median Runtime : 14.468519ms
+Standard Deviation : 15.229649503163577ms
+--------------------
+RB Speedup : 824.3740926390601x
+

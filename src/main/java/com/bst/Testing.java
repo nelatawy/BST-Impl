@@ -6,14 +6,14 @@ import Tree.BST;
 import Tree.RedBlackTree;
 import Tree.SimpleBST;
 
+import javax.print.attribute.standard.MediaName;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Testing {
     enum TreeType{
@@ -78,18 +78,32 @@ public class Testing {
 
     static void populateAnalysisDataFile(Path path,
                                          int sizeIncrements, int fromSize, int toSize,
-                                         double sortedPercent,TreeType treeType) throws IOException {
+                                         double sortedPercent) throws IOException {
         if (!Files.exists(path)){
             Files.createFile(path);
-            Files.writeString(path, "Normal Algorithm, TreeType, Size, SortedPercent, Normal Runtime, Tree Runtime\n");
+            Files.writeString(path, "Normal Algorithm, Size, SortedPercent, Normal Runtime, RB Runtime, BST Runtime\n");
         }
         int arrSize = fromSize;
         while (arrSize <= toSize){
-            double treeStart, treeEnd, normStart, normEnd;
-            double treeRuntime, normRuntime;
-            List<Integer> arr = ArrayGenerator.generatePartiallySortedArray(sortedPercent, arrSize);
-            BST<Integer> bst = treeType == TreeType.RB_TREE ? new RedBlackTree<>() : new SimpleBST<>();
+            double treeStart, treeEnd;
+            double RBtreeStart, RBtreeEnd;
+            double normStart, normEnd;
 
+            double RBtreeRuntime, normRuntime, treeRuntime;
+            List<Integer> arr = ArrayGenerator.generatePartiallySortedArray(sortedPercent, arrSize);
+            //RB tree
+            BST<Integer> bst =  new RedBlackTree<>();
+
+            RBtreeStart = System.nanoTime();
+            for (int i : arr){
+                bst.insert(i);
+            }
+            bst.inOrder();//sorting
+            RBtreeEnd = System.nanoTime();
+            RBtreeRuntime = (RBtreeEnd - RBtreeStart)/1e6;
+
+            // Simple BST
+            bst = new SimpleBST<>();
             treeStart = System.nanoTime();
             for (int i : arr){
                 bst.insert(i);
@@ -105,7 +119,7 @@ public class Testing {
 
             Files.writeString(
                     path,
-                    "MergeSort, " + treeType.toString() + ", " + arrSize + ", " + sortedPercent + ", " + normRuntime + ", " + treeRuntime + "\n",
+                    "MergeSort, " + arrSize + ", " + sortedPercent + ", " + normRuntime + ", " + RBtreeRuntime + ", " + treeRuntime + "\n",
                     StandardOpenOption.APPEND);
 
             arrSize += sizeIncrements;
@@ -113,10 +127,120 @@ public class Testing {
     }
 
 
+    static void runBenchmarks(){
+        int size = (int) 1e5;
+        int num_itrs = 5;
+        List<Integer> sortedPercentages = List.of(90, 95, 99);
+
+        for (int sortedPercentage : sortedPercentages){
+            List<Integer> arr = ArrayGenerator.generatePartiallySortedArray(sortedPercentage, size);
+            List<Double> RBRunningTimes = new ArrayList<>();
+            List<Double> BSTRunningTimes = new ArrayList<>();
+            List<Double> NormRunningTimes = new ArrayList<>();
+            for (int i = 0; i < num_itrs; i++){
+
+                double treeStart, treeEnd;
+                double RBtreeStart, RBtreeEnd;
+                double normStart, normEnd;
+
+                //RB tree
+                BST<Integer> bst =  new RedBlackTree<>();
+
+                RBtreeStart = System.nanoTime();
+                for (int ele : arr){
+                    bst.insert(ele);
+                }
+                bst.inOrder();//sorting
+                RBtreeEnd = System.nanoTime();
+                RBRunningTimes.add((RBtreeEnd - RBtreeStart)/1e6);
+
+                // Simple BST
+                bst = new SimpleBST<>();
+                treeStart = System.nanoTime();
+                for (int ele : arr){
+                    bst.insert(ele);
+                }
+                bst.inOrder();//sorting
+                treeEnd = System.nanoTime();
+                BSTRunningTimes.add((treeEnd - treeStart)/1e6);
+
+                List<Integer> temp = new ArrayList<>(arr);
+                // since the following sorting method sorts in place and i don't want to mess with the og array
+                normStart = System.nanoTime();
+                new MergeSort<Integer>().sort(temp, Comparator.naturalOrder());
+                normEnd = System.nanoTime();
+                NormRunningTimes.add((normEnd - normStart)/1e6);
+
+            }
+
+
+            double median, standardDeviation;
+
+            System.out.println("Array with " + (100 - sortedPercentage) + "% randomization");
+            System.out.println("-".repeat(20));
+
+            // NORMAL  ---------
+            System.out.println("Normal (Merge Sort)\n" + "-".repeat(20));
+
+            Collections.sort(NormRunningTimes);
+
+            double normMean = NormRunningTimes.stream().mapToDouble(e->e).average().orElse(0.0);
+            median = (NormRunningTimes.get(num_itrs / 2 - 1) + NormRunningTimes.get(num_itrs / 2)) / 2.0;
+
+            standardDeviation = Math.sqrt(NormRunningTimes.stream()
+                    .mapToDouble(e -> Math.pow(e - normMean, 2))
+                    .average()
+                    .orElse(0.0));
+
+            System.out.println("Mean Runtime : " + normMean + "ms");
+            System.out.println("Median Runtime : " + median + "ms");
+            System.out.println("Standard Deviation : " + standardDeviation + "ms");
+            System.out.println("-".repeat(20));
+
+
+            // BST --------
+            System.out.println("BST (Naive)\n" + "-".repeat(20));
+
+            Collections.sort(BSTRunningTimes);
+            double BSTmean = BSTRunningTimes.stream().mapToDouble(e->e).average().orElse(0.0);
+            median = (BSTRunningTimes.get(num_itrs / 2 - 1) + BSTRunningTimes.get(num_itrs / 2)) / 2.0;
+            standardDeviation = Math.sqrt(BSTRunningTimes.stream()
+                    .mapToDouble(e -> Math.pow(e - BSTmean, 2))
+                    .average()
+                    .orElse(0.0));
+
+            System.out.println("Mean Runtime : " + BSTmean + "ms");
+            System.out.println("Median Runtime : " + median + "ms");
+            System.out.println("Standard Deviation : " + standardDeviation + "ms");
+            System.out.println("-".repeat(20));
+
+
+            // BST RB-TREE ---------
+            System.out.println("BST (Red-Black)\n" + "-".repeat(20));
+
+            Collections.sort(RBRunningTimes);
+
+            double RBmean = RBRunningTimes.stream().mapToDouble(e->e).average().orElse(0.0);
+            median = (RBRunningTimes.get(num_itrs / 2 - 1) + RBRunningTimes.get(num_itrs / 2)) / 2.0;
+            standardDeviation = Math.sqrt(RBRunningTimes.stream()
+                    .mapToDouble(e -> Math.pow(e - RBmean, 2))
+                    .average()
+                    .orElse(0.0));
+
+            System.out.println("Mean Runtime : " + RBmean + "ms");
+            System.out.println("Median Runtime : " + median + "ms");
+            System.out.println("Standard Deviation : " + standardDeviation + "ms");
+
+            System.out.println("-".repeat(20));
+
+            System.out.println("RB Speedup : " + (BSTmean / RBmean) + "x");
+        }
+    }
+
     static void main() throws IOException {
 
-
-        populateAnalysisDataFile(Paths.get("runtime_data.csv"), 100, (int)1, (int)1e4, 75, Testing.TreeType.RB_TREE);
+        runBenchmarks();
+//        populateAnalysisDataFile(Paths.get("runtime_data.csv"), 100, (int)1, (int)1e4, 80);
 
     }
 
