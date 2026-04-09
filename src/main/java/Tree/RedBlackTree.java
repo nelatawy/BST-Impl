@@ -20,49 +20,62 @@ public class RedBlackTree<E extends Comparable<E>> extends BST<E> {
         }
     }
 
-    class RBValidator{
-        Logger logger = LoggerFactory.getLogger(RBValidator.class);
-        boolean isValidTree(RedBlackNode<E> root){
+    private static class RBValidator<E> {
+        private static final Logger logger = LoggerFactory.getLogger(RBValidator.class);
+
+        boolean isValidTree(RedBlackNode<E> root, RedBlackNode<E> nil) {
             if (root == null || root == nil)
                 return true;
             if (root.color == Color.RED || nil.color == Color.RED ){
                 logger.error("Root color or Nil color violation");
                 return false;
             }
-            if (hasDoubleReds(root, Color.BLACK)){
+            if (hasDoubleReds(root, nil, Color.BLACK)){
                 logger.error("A Red node has a Red child");
                 return false;
             }
-            if (getBlackHeight(root) != -1){
+            if (getBlackHeight(root, nil) == -1){
                 logger.error("Black height mismatch between children");
                 return false;
             }
-            logger.info("Tree is balanced");
+            logger.info("validation is successful");
             return true;
         }
-        boolean hasDoubleReds(RedBlackNode<E> root, Color parentColor){
+
+        private boolean hasDoubleReds(RedBlackNode<E> root, RedBlackNode<E> nil, Color parentColor){
             if (root == null || root == nil)
                 return false;
-            if (parentColor == Color.RED && root.color == Color.RED)
+
+            if (parentColor == Color.RED && root.color == Color.RED){
+                logger.error("Double Red Violation at node: {}", root.data);
                 return true;
-            return (hasDoubleReds((RedBlackNode<E>) root.left, root.color) || hasDoubleReds((RedBlackNode<E>) root.right, root.color));
+            }
+
+            return (hasDoubleReds((RedBlackNode<E>) root.left, nil, root.color) ||
+                    hasDoubleReds((RedBlackNode<E>) root.right, nil, root.color));
         }
 
-        int getBlackHeight(RedBlackNode<E> root){ //returns -1 in case of mismatching b-heights for children
+        private int getBlackHeight(RedBlackNode<E> root, RedBlackNode<E> nil){
             if (root == null || root == nil)
                 return 0;
 
-            int lheight = getBlackHeight((RedBlackNode<E>) root.left);
-            int rheight = getBlackHeight((RedBlackNode<E>) root.right);
-            if (lheight != rheight || lheight == -1 ){
+            int lheight = getBlackHeight((RedBlackNode<E>) root.left, nil);
+            int rheight = getBlackHeight((RedBlackNode<E>) root.right, nil);
+
+            if (lheight == -1 || rheight == -1) return -1;
+
+            if (lheight != rheight){
+                logger.error("Black height mismatch at node {}. Left: {}, Right: {}", root.data, lheight, rheight);
                 return -1;
             }
+
             return ((root.color == Color.BLACK)? 1 : 0) + lheight;
         }
     }
 
+
     RedBlackNode<E> nil ;
-    RBValidator validator;
+    RBValidator<E> validator;
     public RedBlackTree() {
         nil = new RedBlackNode<>(null, Color.BLACK);
         root = nil;
@@ -70,7 +83,7 @@ public class RedBlackTree<E extends Comparable<E>> extends BST<E> {
         nil.right = nil;
         nil.parent = nil;
 
-        validator = new RBValidator();
+        validator = new RBValidator<>();
 
     }
 
@@ -148,7 +161,7 @@ public class RedBlackTree<E extends Comparable<E>> extends BST<E> {
 
     protected boolean insert(E data, boolean debugMode){
         boolean inserted = insert(data);
-        if (inserted && debugMode && validator.isValidTree((RedBlackNode<E>) root)){
+        if (inserted && debugMode && validator.isValidTree((RedBlackNode<E>) root, nil)){
             System.out.println("invalid Tree");
             return false;
         }
@@ -262,7 +275,7 @@ public class RedBlackTree<E extends Comparable<E>> extends BST<E> {
 
     protected boolean delete(E data, boolean debugMode){
         boolean deleted = delete(data);
-        if (deleted && debugMode && validator.isValidTree((RedBlackNode<E>) root)){
+        if (deleted && debugMode && validator.isValidTree((RedBlackNode<E>) root, nil)){
             System.out.println("invalid Tree");
             return false;
         }
