@@ -1,0 +1,148 @@
+Array with 10% randomization
+--------------------
+Run-Insert-Delete Benchmarks
+ --------------------
+Tree height after insertions : 28
+Tree height after insertions : 56883
+Tree height after insertions : 28
+Tree height after insertions : 56883
+Tree height after insertions : 28
+Tree height after insertions : 56883
+Tree height after insertions : 28
+Tree height after insertions : 56883
+Tree height after insertions : 28
+Tree height after insertions : 56883
+Red-Black Tree
+--------------------
+Mean time for Insertions/Lookups/Deletes : 26.4927146ms
+--------------------
+Simple BST
+--------------------
+Mean time for Insertions/Lookups/Deletes : 20775.685736000003ms
+--------------------
+Speed Up by Red-Black Tree : 784.2037348637729x
+
+
+
+Sorting Benchmarks
+--------------------
+Normal (Merge Sort)
+--------------------
+Mean Runtime : 22.7223144ms
+Median Runtime : 23.119166999999997ms
+Standard Deviation : 2.193348793281141ms
+--------------------
+BST (Naive)
+--------------------
+Mean Runtime : 8632.012877ms
+Median Runtime : 8641.211765ms
+Standard Deviation : 129.42295973962058ms
+--------------------
+BST (Red-Black)
+--------------------
+Mean Runtime : 13.4762206ms
+Median Runtime : 10.112677999999999ms
+Standard Deviation : 5.809311455435785ms
+--------------------
+RB Speedup : 640.53662619622x
+
+
+
+Array with 5% randomization
+--------------------
+Run-Insert-Delete Benchmarks
+ --------------------
+Tree height after insertions : 28
+Tree height after insertions : 59982
+Tree height after insertions : 28
+Tree height after insertions : 59982
+Tree height after insertions : 28
+Tree height after insertions : 59982
+Tree height after insertions : 28
+Tree height after insertions : 59982
+Tree height after insertions : 28
+Tree height after insertions : 59982
+Red-Black Tree
+--------------------
+Mean time for Insertions/Lookups/Deletes : 21.1711884ms
+--------------------
+Simple BST
+--------------------
+Mean time for Insertions/Lookups/Deletes : 20806.7684476ms
+--------------------
+Speed Up by Red-Black Tree : 982.7869864688371x
+
+
+
+Sorting Benchmarks
+--------------------
+Normal (Merge Sort)
+--------------------
+Mean Runtime : 22.771117ms
+Median Runtime : 20.204985999999998ms
+Standard Deviation : 4.911480818822079ms
+--------------------
+BST (Naive)
+--------------------
+Mean Runtime : 8615.8731378ms
+Median Runtime : 8552.693238ms
+Standard Deviation : 181.9622047113808ms
+--------------------
+BST (Red-Black)
+--------------------
+Mean Runtime : 8.9531474ms
+Median Runtime : 8.377192ms
+Standard Deviation : 1.4548032189534912ms
+--------------------
+RB Speedup : 962.3289724683857x
+
+
+
+Array with 1% randomization
+--------------------
+Run-Insert-Delete Benchmarks
+ --------------------
+Tree height after insertions : 28
+Tree height after insertions : 62566
+Tree height after insertions : 28
+Tree height after insertions : 62566
+Tree height after insertions : 28
+Tree height after insertions : 62566
+Tree height after insertions : 28
+Tree height after insertions : 62566
+Tree height after insertions : 28
+Tree height after insertions : 62566
+Red-Black Tree
+--------------------
+Mean time for Insertions/Lookups/Deletes : 21.1846916ms
+--------------------
+Simple BST
+--------------------
+Mean time for Insertions/Lookups/Deletes : 22116.230588ms
+--------------------
+Speed Up by Red-Black Tree : 1043.972270429464x
+
+
+
+Sorting Benchmarks
+--------------------
+Normal (Merge Sort)
+--------------------
+Mean Runtime : 19.651953600000002ms
+Median Runtime : 18.687714ms
+Standard Deviation : 3.396238298144793ms
+--------------------
+BST (Naive)
+--------------------
+Mean Runtime : 8845.737537600002ms
+Median Runtime : 8759.0156315ms
+Standard Deviation : 197.48437754550557ms
+--------------------
+BST (Red-Black)
+--------------------
+Mean Runtime : 8.3875146ms
+Median Runtime : 7.728339ms
+Standard Deviation : 1.5342336720870915ms
+--------------------
+RB Speedup : 1054.6315517113976x
+

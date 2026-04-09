@@ -40,8 +40,7 @@ public class ArrayGenerator {
 
     public static List<Integer> generateSortedArray(int size, int from, int to, boolean descending) {
         List<Integer> list = generateRandomArray(size, from, to);
-        new MergeSort<Integer>().sort(list, (descending) ? Comparator.reverseOrder() : Comparator.naturalOrder());
-        return list;
+        return new MergeSort<Integer>().sort(list, (descending) ? Comparator.reverseOrder() : Comparator.naturalOrder());
     }
 
     public static List<Integer> generateSortedArray(int size) {

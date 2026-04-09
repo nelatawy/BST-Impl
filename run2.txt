@@ -1,0 +1,102 @@
+Array with 10% randomization
+--------------------
+Run-Insert-Delete Benchmarks 
+ --------------------
+Red-Black Tree
+--------------------
+Mean time for Insertions/Lookups/Deletes : 23.120982199999997ms
+--------------------
+Simple BST
+--------------------
+Mean time for Insertions/Lookups/Deletes : 16465.620534600002ms
+--------------------
+Speed Up by Red-Black Tree : 712.1505648925246x
+Sorting Benchmarks
+--------------------
+Normal (Merge Sort)
+--------------------
+Mean Runtime : 18.527614800000002ms
+Median Runtime : 18.739016999999997ms
+Standard Deviation : 1.8374293369802714ms
+--------------------
+BST (Naive)
+--------------------
+Mean Runtime : 6516.7772056ms
+Median Runtime : 6414.924425499999ms
+Standard Deviation : 266.2064003362387ms
+--------------------
+BST (Red-Black)
+--------------------
+Mean Runtime : 10.9455092ms
+Median Runtime : 8.091503ms
+Standard Deviation : 5.933515640535901ms
+--------------------
+RB Speedup : 595.3836488118799x
+Array with 5% randomization
+--------------------
+Run-Insert-Delete Benchmarks 
+ --------------------
+Red-Black Tree
+--------------------
+Mean time for Insertions/Lookups/Deletes : 14.512978800000003ms
+--------------------
+Simple BST
+--------------------
+Mean time for Insertions/Lookups/Deletes : 19737.8276924ms
+--------------------
+Speed Up by Red-Black Tree : 1360.0121632093885x
+Sorting Benchmarks
+--------------------
+Normal (Merge Sort)
+--------------------
+Mean Runtime : 18.485237ms
+Median Runtime : 16.171781ms
+Standard Deviation : 3.617055365269214ms
+--------------------
+BST (Naive)
+--------------------
+Mean Runtime : 7621.160571800001ms
+Median Runtime : 7522.8469294999995ms
+Standard Deviation : 175.5542828839ms
+--------------------
+BST (Red-Black)
+--------------------
+Mean Runtime : 7.074540600000001ms
+Median Runtime : 6.3224160000000005ms
+Standard Deviation : 1.1484494806533891ms
+--------------------
+RB Speedup : 1077.2657904882192x
+Array with 1% randomization
+--------------------
+Run-Insert-Delete Benchmarks 
+ --------------------
+Red-Black Tree
+--------------------
+Mean time for Insertions/Lookups/Deletes : 14.914629600000001ms
+--------------------
+Simple BST
+--------------------
+Mean time for Insertions/Lookups/Deletes : 19621.511105999998ms
+--------------------
+Speed Up by Red-Black Tree : 1315.5882266093954x
+Sorting Benchmarks
+--------------------
+Normal (Merge Sort)
+--------------------
+Mean Runtime : 15.233101999999999ms
+Median Runtime : 14.8909355ms
+Standard Deviation : 0.4934726921275385ms
+--------------------
+BST (Naive)
+--------------------
+Mean Runtime : 7774.279196ms
+Median Runtime : 7721.0485245ms
+Standard Deviation : 123.79900428143421ms
+--------------------
+BST (Red-Black)
+--------------------
+Mean Runtime : 6.4088622ms
+Median Runtime : 5.9648345ms
+Standard Deviation : 0.8361268444869833ms
+--------------------
+RB Speedup : 1213.051389371424x
