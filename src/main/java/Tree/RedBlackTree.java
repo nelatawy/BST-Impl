@@ -1,6 +1,9 @@
 package Tree;
 
 import java.util.List;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 
 public class RedBlackTree<E extends Comparable<E>> extends BST<E> {
 
@@ -17,13 +20,57 @@ public class RedBlackTree<E extends Comparable<E>> extends BST<E> {
         }
     }
 
+    class RBValidator{
+        Logger logger = LoggerFactory.getLogger(RBValidator.class);
+        boolean isValidTree(RedBlackNode<E> root){
+            if (root == null || root == nil)
+                return true;
+            if (root.color == Color.RED || nil.color == Color.RED ){
+                logger.error("Root color or Nil color violation");
+                return false;
+            }
+            if (hasDoubleReds(root, Color.BLACK)){
+                logger.error("A Red node has a Red child");
+                return false;
+            }
+            if (getBlackHeight(root) != -1){
+                logger.error("Black height mismatch between children");
+                return false;
+            }
+            logger.info("Tree is balanced");
+            return true;
+        }
+        boolean hasDoubleReds(RedBlackNode<E> root, Color parentColor){
+            if (root == null || root == nil)
+                return false;
+            if (parentColor == Color.RED && root.color == Color.RED)
+                return true;
+            return (hasDoubleReds((RedBlackNode<E>) root.left, root.color) || hasDoubleReds((RedBlackNode<E>) root.right, root.color));
+        }
+
+        int getBlackHeight(RedBlackNode<E> root){ //returns -1 in case of mismatching b-heights for children
+            if (root == null || root == nil)
+                return 0;
+
+            int lheight = getBlackHeight((RedBlackNode<E>) root.left);
+            int rheight = getBlackHeight((RedBlackNode<E>) root.right);
+            if (lheight != rheight || lheight == -1 ){
+                return -1;
+            }
+            return ((root.color == Color.BLACK)? 1 : 0) + lheight;
+        }
+    }
+
     RedBlackNode<E> nil ;
+    RBValidator validator;
     public RedBlackTree() {
         nil = new RedBlackNode<>(null, Color.BLACK);
         root = nil;
         nil.left = nil;
         nil.right = nil;
         nil.parent = nil;
+
+        validator = new RBValidator();
 
     }
 
@@ -77,14 +124,11 @@ public class RedBlackTree<E extends Comparable<E>> extends BST<E> {
         TreeNode<E> scanItr = root;
         while (scanItr != nil) {
             itr = scanItr;
-//            System.out.println(scanItr.data);
             if (data.compareTo(scanItr.data) == 0) {
                 return false; //already exists
             } else if (data.compareTo(scanItr.data) > 0) {
-//                System.out.println("Going with " + data.toString() + " to the right of " + scanItr.data.toString());
                 scanItr = scanItr.right;
             } else  {
-//                System.out.println("Going with " + data.toString() + " to the left of " + scanItr.data.toString());
                 scanItr = scanItr.left;
             }
 
@@ -93,15 +137,22 @@ public class RedBlackTree<E extends Comparable<E>> extends BST<E> {
         newNode.parent = itr;
         newNode.left = newNode.right = nil;
         if (data.compareTo(itr.data) < 0) {
-//            System.out.println("Inserting " + data.toString() + " at the left of " + itr.data.toString());
             itr.left = newNode;
         } else  {
-//            System.out.println("Inserting " + data.toString() + " at the right of " + itr.data.toString());
             itr.right = newNode;
         }
         insertFixUp(newNode);
         size++;
         return true;
+    }
+
+    protected boolean insert(E data, boolean debugMode){
+        boolean inserted = insert(data);
+        if (inserted && debugMode && validator.isValidTree((RedBlackNode<E>) root)){
+            System.out.println("invalid Tree");
+            return false;
+        }
+        return inserted;
     }
 
     private void insertFixUp(TreeNode<E> node) {
@@ -156,6 +207,8 @@ public class RedBlackTree<E extends Comparable<E>> extends BST<E> {
         ((RedBlackNode<E>) root).color = Color.BLACK;
     }
 
+
+
     @Override
     public boolean delete(E data) {
         if (root == nil) {
@@ -205,6 +258,15 @@ public class RedBlackTree<E extends Comparable<E>> extends BST<E> {
             }
         }
         return false;
+    }
+
+    protected boolean delete(E data, boolean debugMode){
+        boolean deleted = delete(data);
+        if (deleted && debugMode && validator.isValidTree((RedBlackNode<E>) root)){
+            System.out.println("invalid Tree");
+            return false;
+        }
+        return deleted;
     }
 
     private void deleteFixUp(RedBlackNode<E> rootToFix) {

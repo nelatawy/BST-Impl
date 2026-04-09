@@ -1,4 +1,4 @@
-package Visualization;
+package main.java.Visualization;
 
 import Tree.RedBlackTree;
 import javafx.fxml.FXML;
@@ -13,12 +13,16 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 
 public class visController implements Initializable {
+
+    private static final Logger log = LoggerFactory.getLogger(visController.class);
 
     @FXML
     Pane viewport;
@@ -109,7 +113,7 @@ public class visController implements Initializable {
             canvas.getChildren().clear();
             draw((RedBlackTree.RedBlackNode<Integer>) tree.getRoot(), 0, MAX_DIM, 1);
         } catch (Exception e){
-            System.err.println("An error occurred while trying to insert");
+            log.error("An error occurred while trying to insert", e);
         }
 
     }
@@ -122,7 +126,7 @@ public class visController implements Initializable {
             canvas.getChildren().clear();
             draw((RedBlackTree.RedBlackNode<Integer>) tree.getRoot(), 0, MAX_DIM, 1);
         } catch (Exception e){
-            System.err.println("An error occurred while trying to delete");
+            log.error("An error occurred while trying to delete", e);
         }
 
     }
