@@ -11,7 +11,7 @@
             stylesheets="@styles.css"
             xmlns="http://javafx.com/javafx/25"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Visualization.visController">
+            fx:controller="Visualization.VisController">
 
   <Pane fx:id="viewport"
         layoutX="12.0" layoutY="58.0"

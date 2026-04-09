@@ -1,4 +1,4 @@
-package main.java.Visualization;
+package Visualization;
 
 import Tree.RedBlackTree;
 import javafx.fxml.FXML;
@@ -19,10 +19,9 @@ import org.slf4j.LoggerFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+public class VisController implements Initializable {
 
-public class visController implements Initializable {
-
-    private static final Logger log = LoggerFactory.getLogger(visController.class);
+    private static final Logger log = LoggerFactory.getLogger(VisController.class);
 
     @FXML
     Pane viewport;
@@ -45,14 +44,12 @@ public class visController implements Initializable {
     int MAX_DIM = 1000;
     double ZOOM_FACTOR = 1.05;
 
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         gridLastX = 0;
         gridLastY = 0;
-        scale= 1;
+        scale = 1;
 
         Rectangle clip = new Rectangle();
         clip.widthProperty().bind(viewport.widthProperty());
@@ -67,16 +64,16 @@ public class visController implements Initializable {
 
         viewport.setOnScroll(e -> {
             if (e.getDeltaY() > 0) {
-                scale *= ZOOM_FACTOR;   // zoom in
-            } else if(e.getDeltaY() < 0){
-                scale /= ZOOM_FACTOR;   // zoom out
+                scale *= ZOOM_FACTOR; // zoom in
+            } else if (e.getDeltaY() < 0) {
+                scale /= ZOOM_FACTOR; // zoom out
             }
             canvas.setScaleX(scale);
             canvas.setScaleY(scale);
         });
 
         canvas.setOnMousePressed(e -> {
-            gridLastX =  e.getSceneX();
+            gridLastX = e.getSceneX();
             gridLastY = e.getSceneY();
         });
 
@@ -106,50 +103,49 @@ public class visController implements Initializable {
     }
 
     @FXML
-    public void insertInTree(){
-        try{
+    public void insertInTree() {
+        try {
             Integer val = Integer.parseInt(value.getText());
             tree.insert(val);
             canvas.getChildren().clear();
             draw((RedBlackTree.RedBlackNode<Integer>) tree.getRoot(), 0, MAX_DIM, 1);
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error("An error occurred while trying to insert", e);
         }
 
     }
 
     @FXML
-    public void deleteFromTree(){
-        try{
+    public void deleteFromTree() {
+        try {
             Integer val = Integer.parseInt(value.getText());
             tree.delete(val);
             canvas.getChildren().clear();
             draw((RedBlackTree.RedBlackNode<Integer>) tree.getRoot(), 0, MAX_DIM, 1);
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error("An error occurred while trying to delete", e);
         }
 
     }
 
-    public Group draw(RedBlackTree.RedBlackNode<Integer> root, int minX, int maxX, int depth){
-        if (tree.isNil(root)){
+    public Group draw(RedBlackTree.RedBlackNode<Integer> root, int minX, int maxX, int depth) {
+        if (tree.isNil(root)) {
             return null;
         }
-        int targetX = (minX + maxX)/2;
+        int targetX = (minX + maxX) / 2;
         int targetY = depth * LEVEL_HEIGHT;
 
         Group nodeGp = new Group();
         nodeGp.setLayoutX(targetX);
         nodeGp.setLayoutY(targetY);
 
-        Circle node = new Circle(0, 0, CIRCLE_RADIUS); //relative to the group
+        Circle node = new Circle(0, 0, CIRCLE_RADIUS); // relative to the group
         Text label = new Text(String.valueOf(root.data));
-        label.setX(- label.getLayoutBounds().getWidth() / 2); //relative to the gp
+        label.setX(-label.getLayoutBounds().getWidth() / 2); // relative to the gp
         label.setY(label.getLayoutBounds().getHeight() / 4);
 
         nodeGp.getChildren().addAll(node, label);
         canvas.getChildren().add(nodeGp);
-
 
         nodeGp.setOnMousePressed(e -> {
             Point2D p = canvas.sceneToLocal(e.getSceneX(), e.getSceneY());
@@ -173,21 +169,16 @@ public class visController implements Initializable {
             e.consume();
         });
 
-
-
-
         label.setFill(Color.WHITE);
-        node.getStyleClass().add((root.color == RedBlackTree.Color.BLACK)? "black-node" : "red-node");
+        node.getStyleClass().add((root.color == RedBlackTree.Color.BLACK) ? "black-node" : "red-node");
 
-
-
-        if (!tree.isNil(root.left)){
+        if (!tree.isNil(root.left)) {
 
             Group leftNode = draw((RedBlackTree.RedBlackNode<Integer>) root.left, minX, targetX, depth + 1);
             connectNodes(nodeGp, leftNode);
         }
 
-        if (!tree.isNil(root.right)){
+        if (!tree.isNil(root.right)) {
             Group rightNode = draw((RedBlackTree.RedBlackNode<Integer>) root.right, targetX, maxX, depth + 1);
             connectNodes(nodeGp, rightNode);
         }
@@ -198,18 +189,14 @@ public class visController implements Initializable {
         Line line = new Line();
 
         line.startXProperty().bind(
-                first.layoutXProperty().add(first.translateXProperty())
-        );
+                first.layoutXProperty().add(first.translateXProperty()));
         line.startYProperty().bind(
-                first.layoutYProperty().add(first.translateYProperty())
-        );
+                first.layoutYProperty().add(first.translateYProperty()));
 
         line.endXProperty().bind(
-                second.layoutXProperty().add(second.translateXProperty())
-        );
+                second.layoutXProperty().add(second.translateXProperty()));
         line.endYProperty().bind(
-                second.layoutYProperty().add(second.translateYProperty())
-        );
+                second.layoutYProperty().add(second.translateYProperty()));
 
         canvas.getChildren().addFirst(line);
     }

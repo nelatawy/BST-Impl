@@ -104,8 +104,9 @@ public abstract class BST<E extends Comparable<E>> {
         } else {
             toBeReplaced.parent.right = toBeInserted;
         }
-
-        toBeInserted.parent = toBeReplaced.parent;
+        if (toBeInserted != nullNode){
+            toBeInserted.parent = toBeReplaced.parent;
+        }
 
     }
 
